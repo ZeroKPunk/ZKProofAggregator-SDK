@@ -1,3 +1,3 @@
 export * from "./types";
-export * from "./constant/common";
-export { Orbiter } from "./orbiter";
+export * from "./zkpContractsImpl";
+export { ZkProofAggregator } from "./zkProofAggregator";

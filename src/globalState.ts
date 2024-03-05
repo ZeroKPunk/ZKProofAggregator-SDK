@@ -1,20 +1,6 @@
 import { Signer } from "ethers";
 import { IzkpGlobalState } from "./types";
-import {
-  ZKAVerifier,
-  ZKAVerifier__factory,
-  ZKAFactory,
-  ZKAFactory__factory,
-} from "./zkpContractsImpl";
-
-// let globalState: IGlobalState = {
-//   isMainnet: true,
-//   dealerId: "",
-//   activeSignerType: SIGNER_TYPES.EVM,
-//   evmSigner: {} as Signer,
-//   starknetSigner: {} as Account,
-//   loopringSigner: {} as Web3,
-// };
+import { ZKAFactory, ZKAFactory__factory } from "./zkpContractsImpl";
 
 let globalState: IzkpGlobalState = {
   isMainnet: false,

@@ -1,7 +1,7 @@
 {
-  "name": "zkproofaggregator-sdk",
+  "name": "zktest-sdk",
   "version": "1.0.0",
-  "description": "",
+  "description": "the solution of zkroof aggregator",
   "main": "index.js",
   "author": "pis",
   "license": "MIT",
@@ -13,13 +13,20 @@
     "/dist",
     "/src"
   ],
+  "homepage": "https://github.com/ZeroKPunk/ZKProofAggregator-SDK",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:ZeroKPunk/ZKProofAggregator-SDK.git"
+  },
   "keywords": [
     "sdk",
     "ethereum",
     "dapp",
     "zk",
+    "zero knowledge",
     "web3",
-    "ethers"
+    "ethers",
+    "rollup"
   ],
   "dependencies": {
     "axios": "^1.6.2",
