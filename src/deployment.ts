@@ -4,6 +4,8 @@ import {
   ZKAVerifier__factory,
   ZKAFactory,
   ZKAFactory__factory,
+  SPVVerifier,
+  SPVVerifier__factory,
 } from "./zkpContractsImpl";
 import { Signer, ContractTransactionResponse } from "ethers";
 
@@ -60,4 +62,13 @@ export async function deployZKAVerifier(
       url
     ),
   };
+}
+
+export async function deploySPVVerifier(
+  signerL1: Signer,
+  spvVerifierAddress: string
+): Promise<ContractTransactionResponse> {
+  const spvVerifier = await new SPVVerifier__factory(signerL1).deploy();
+  await spvVerifier.waitForDeployment();
+  return await spvVerifier.setVerifier(spvVerifierAddress);
 }

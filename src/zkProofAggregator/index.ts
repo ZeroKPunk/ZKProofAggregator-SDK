@@ -1,8 +1,16 @@
 import { Signer, ContractTransactionResponse } from "ethers";
-import { IzkpGlobalState, IVerifierMeta } from "../types";
-import { getGlobalState, setGlobalState, setZkaFactory } from "../globalState";
+import { IzkpGlobalState, IVerifierMeta, IspvGlobalState } from "../types";
+import {
+  getGlobalState,
+  getSpvGlobalState,
+  setGlobalState,
+  setSPV,
+  setSpvGlobalState,
+  setZkaFactory,
+} from "../globalState";
 import {
   deployAllContractsNeeded,
+  deploySPVVerifier,
   deployZKAFactory,
   deployZKAVerifier,
   deployZKProofAggregatorImpl,
@@ -27,11 +35,11 @@ export class ZkProofAggregator {
     return ZkProofAggregator.instance;
   }
 
-  getGlobalState(): IzkpGlobalState {
+  getConfig(): IzkpGlobalState {
     return getGlobalState();
   }
 
-  setGlobalState(newState: Partial<IzkpGlobalState> = {}) {
+  setConfig(newState: Partial<IzkpGlobalState> = {}) {
     setGlobalState(newState);
   }
 
@@ -95,5 +103,36 @@ export class ZkProofAggregator {
       throw new Error("Signer not found, please set it first.");
     }
     return zkpVerify(signer, ZKAVerifierAddress, zkProof);
+  }
+}
+
+export class SPV {
+  private static instance: SPV;
+  constructor(signer: Signer, spvAddress?: string) {
+    setGlobalState({ signer });
+    if (spvAddress) {
+      setSPV(signer, spvAddress);
+    }
+  }
+  public static getInstance(signer: Signer, spvAddress?: string) {
+    if (!SPV.instance) {
+      SPV.instance = new SPV(signer, spvAddress);
+    }
+    return SPV.instance;
+  }
+
+  getConfig() {
+    return getSpvGlobalState();
+  }
+
+  setConfig(newState: Partial<IspvGlobalState> = {}) {
+    setSpvGlobalState(newState);
+  }
+
+  async deploySPVVerifier(
+    signer: Signer,
+    spvVerifierAddress: string
+  ): Promise<ContractTransactionResponse> {
+    return deploySPVVerifier(signer, spvVerifierAddress);
   }
 }

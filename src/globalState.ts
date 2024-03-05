@@ -1,11 +1,22 @@
 import { Signer } from "ethers";
-import { IzkpGlobalState } from "./types";
-import { ZKAFactory, ZKAFactory__factory } from "./zkpContractsImpl";
+import { IzkpGlobalState, IspvGlobalState } from "./types";
+import {
+  ZKAFactory,
+  ZKAFactory__factory,
+  SPVVerifier,
+  SPVVerifier__factory,
+} from "./zkpContractsImpl";
 
 let globalState: IzkpGlobalState = {
   isMainnet: false,
   signer: {} as Signer,
   zkaFactory: {} as ZKAFactory,
+};
+
+let spvGlobalState: IspvGlobalState = {
+  isMainnet: false,
+  signer: {} as Signer,
+  spvVerifier: {} as SPVVerifier,
 };
 
 function setGlobalState(newState: Partial<IzkpGlobalState> = {}) {
@@ -29,4 +40,32 @@ function getGlobalState(): IzkpGlobalState {
   return globalState;
 }
 
-export { setGlobalState, getGlobalState, setZkaFactory };
+function setSpvGlobalState(newState: Partial<IspvGlobalState> = {}) {
+  const spvGlobalStateKeys = Object.keys(newState);
+  if (!!spvGlobalStateKeys.length) {
+    spvGlobalStateKeys.forEach((v) => {
+      spvGlobalState[v] = newState[v] ?? spvGlobalState[v];
+    });
+  }
+}
+
+function setSPV(signer: Signer, spvVerifierAddress: string) {
+  const spvVerifier: SPVVerifier = SPVVerifier__factory.connect(
+    spvVerifierAddress,
+    signer
+  );
+  setSpvGlobalState({ spvVerifier });
+}
+
+function getSpvGlobalState(): IspvGlobalState {
+  return spvGlobalState;
+}
+
+export {
+  setGlobalState,
+  getGlobalState,
+  setZkaFactory,
+  setSpvGlobalState,
+  getSpvGlobalState,
+  setSPV,
+};

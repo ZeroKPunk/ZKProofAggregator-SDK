@@ -25,11 +25,10 @@ describe.skip("zk-globalState tests", () => {
     zkpproofAggregator = ZkProofAggregator.getInstance(signer);
 
     await zkpproofAggregator.deployAllContractsNeeded(
-      zkpproofAggregator.getGlobalState().signer
+      zkpproofAggregator.getConfig().signer
     );
 
-    const zkaFactory: ZKAFactory =
-      zkpproofAggregator.getGlobalState().zkaFactory;
+    const zkaFactory: ZKAFactory = zkpproofAggregator.getConfig().zkaFactory;
 
     console.log("ZKAFactory deploy at: ", await zkaFactory.getAddress());
 
@@ -39,16 +38,14 @@ describe.skip("zk-globalState tests", () => {
   });
 
   test("getGlobalState", async () => {
-    const globalState = zkpproofAggregator.getGlobalState();
+    const globalState = zkpproofAggregator.getConfig();
     expect(globalState).toBeDefined();
   });
 
   test("deployZKAVerifier", async () => {
     const zkpVerifierName = "PLONK2";
     const url = "http://localhost:3000";
-    const deployer = await zkpproofAggregator
-      .getGlobalState()
-      .signer.getAddress();
+    const deployer = await zkpproofAggregator.getConfig().signer.getAddress();
     const { tx, computeZKAVerifierAddress } =
       await zkpproofAggregator.deployZKAVerifier(
         zkpVerifierName,

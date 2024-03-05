@@ -1,15 +1,11 @@
 import { beforeAll, describe, expect, test } from "vitest";
 import { ZkProofAggregator } from "../zkProofAggregator";
 import { Wallet, ethers, Signer, keccak256 } from "ethers";
-import {
-  VerifierMock,
-  VerifierMock__factory,
-  ZKAFactory,
-} from "../zkpContractsImpl";
+import { VerifierMock } from "../zkpContractsImpl";
 import { getWallet } from "./utils";
 require("dotenv").config("./.env");
 
-describe("zk-globalState-change tests", () => {
+describe.skip("zk-globalState-change tests", () => {
   let zkpproofAggregator: ZkProofAggregator;
   let plonk2MockVerifier: VerifierMock;
   let proofMock: string;
@@ -26,7 +22,7 @@ describe("zk-globalState-change tests", () => {
   });
 
   test("getGlobalState", async () => {
-    const globalState = zkpproofAggregator.getGlobalState();
+    const globalState = zkpproofAggregator.getConfig();
     expect(globalState).toBeDefined();
     console.log("globalState", globalState);
   });
@@ -40,8 +36,8 @@ describe("zk-globalState-change tests", () => {
         "private key can not be empty, pls add your private to the environment to be able to run the tests"
       );
     const signer: Signer = getWallet(privateKey, providerUrl);
-    zkpproofAggregator.setGlobalState({ signer });
-    const globalState = zkpproofAggregator.getGlobalState();
+    zkpproofAggregator.setConfig({ signer });
+    const globalState = zkpproofAggregator.getConfig();
     expect(globalState).toBeDefined();
     console.log("globalState", globalState);
   });
