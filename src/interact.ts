@@ -5,7 +5,7 @@ import {
   ZKAFactory__factory,
 } from "./typechain-types";
 
-import { Signer } from "ethers";
+import { Signer, ContractTransactionResponse } from "ethers";
 import { IVerifierMeta } from "./types";
 
 export async function fetchAllZKAVerifiersMeta(
@@ -29,10 +29,7 @@ export async function zkpVerify(
   signer: Signer,
   ZKAVerifierAddress: string,
   zkProof: string
-): Promise<{
-  verifyResult: boolean;
-  proofKey: string;
-}> {
+): Promise<ContractTransactionResponse> {
   let verifyResult: boolean = true;
   let proofKey: string = "";
   const zkaVerifier: ZKAVerifier = ZKAVerifier__factory.connect(
@@ -40,22 +37,5 @@ export async function zkpVerify(
     signer
   );
 
-  try {
-    const tx = await zkaVerifier.zkpVerify(zkProof);
-    await tx.wait();
-  } catch (error) {
-    console.log("error: ", error);
-    verifyResult = false;
-  }
-
-  try {
-    proofKey = await zkaVerifier.fetchProofKey(zkProof);
-  } catch (error) {
-    console.log("error: ", error);
-  }
-
-  return {
-    verifyResult,
-    proofKey: proofKey,
-  };
+  return await zkaVerifier.zkpVerify(zkProof);
 }

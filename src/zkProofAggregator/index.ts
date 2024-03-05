@@ -1,4 +1,4 @@
-import { Signer } from "ethers";
+import { Signer, ContractTransactionResponse } from "ethers";
 import { IzkpGlobalState, IVerifierMeta } from "../types";
 import { getGlobalState, setGlobalState, setZkaFactory } from "../globalState";
 import {
@@ -86,10 +86,7 @@ export class ZkProofAggregator {
   async zkpVerify(
     ZKAVerifierAddress: string,
     zkProof: string
-  ): Promise<{
-    verifyResult: boolean;
-    proofKey: string;
-  }> {
+  ): Promise<ContractTransactionResponse> {
     const { signer } = getGlobalState();
     if (!signer) {
       throw new Error("Signer not found, please set it first.");

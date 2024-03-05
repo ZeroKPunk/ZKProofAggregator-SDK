@@ -6,6 +6,7 @@ import {
   VerifierMock__factory,
   ZKAFactory,
 } from "../typechain-types";
+import { sign } from "crypto";
 require("dotenv").config("./.env");
 
 function getWallet(privateKey: string, providerUrl: string) {
@@ -15,6 +16,7 @@ function getWallet(privateKey: string, providerUrl: string) {
 describe("zk-globalState tests", () => {
   let zkpproofAggregator: ZkProofAggregator;
   let plonk2MockVerifier: VerifierMock;
+  let proofMock: string;
 
   beforeAll(async () => {
     const privateKey: string = process.env.PRIVATE_KEY || "";
@@ -35,6 +37,7 @@ describe("zk-globalState tests", () => {
 
     plonk2MockVerifier = await new VerifierMock__factory(signer).deploy();
     await plonk2MockVerifier.waitForDeployment();
+    proofMock = await plonk2MockVerifier.getVerifyCalldata("for test");
   });
 
   test("getGlobalState", async () => {
@@ -53,5 +56,18 @@ describe("zk-globalState tests", () => {
       await plonk2MockVerifier.getAddress()
     );
     console.log("zkpVerifierAddress: ", zkpVerifierAddress);
+  });
+
+  test("fetchZKAVerifier", async () => {
+    const zkpVerifierAddress = await zkpproofAggregator.fetchVerifiersMeta();
+    console.log("zkpVerifierAddress: ", zkpVerifierAddress);
+    expect(zkpVerifierAddress).toBeDefined();
+  });
+
+  test("testZkpVerify", async () => {
+    const currentVerifier = (await zkpproofAggregator.fetchVerifiersMeta())[0]
+      .verifierAddress;
+    const tx = await zkpproofAggregator.zkpVerify(currentVerifier, proofMock);
+    await tx.wait();
   });
 });
