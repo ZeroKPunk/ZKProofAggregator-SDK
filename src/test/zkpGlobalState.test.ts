@@ -27,10 +27,13 @@ describe("zk-globalState tests", () => {
     const signer: Signer = getWallet(privateKey, providerUrl);
     zkpproofAggregator = ZkProofAggregator.getInstance(signer);
 
+    await zkpproofAggregator.deployAllContractsNeeded(
+      zkpproofAggregator.getGlobalState().signer
+    );
+
     const zkaFactory: ZKAFactory =
-      await zkpproofAggregator.deployAllContractsNeeded(
-        zkpproofAggregator.getGlobalState().signer
-      );
+      zkpproofAggregator.getGlobalState().zkaFactory;
+
     console.log("ZKAFactory deploy at: ", await zkaFactory.getAddress());
 
     plonk2MockVerifier = await new VerifierMock__factory(signer).deploy();

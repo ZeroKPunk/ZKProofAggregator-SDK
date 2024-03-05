@@ -39,7 +39,7 @@ export class ZkProofAggregator {
     setZkaFactory(signer, zkaFactoryAddress);
   }
 
-  async deployAllContractsNeeded(signer: Signer) {
+  async deployAllContractsNeeded(signer: Signer): Promise<void> {
     return deployAllContractsNeeded(signer);
   }
 

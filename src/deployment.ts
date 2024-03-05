@@ -27,9 +27,7 @@ export async function deployZKAFactory(
   return zkaFactory;
 }
 
-export async function deployAllContractsNeeded(
-  signer: Signer
-): Promise<ZKAFactory> {
+export async function deployAllContractsNeeded(signer: Signer): Promise<void> {
   const ZKProofAggregatorImplAddress = await deployZKProofAggregatorImpl(
     signer
   );
@@ -38,7 +36,6 @@ export async function deployAllContractsNeeded(
     ZKProofAggregatorImplAddress
   );
   setGlobalState({ zkaFactory });
-  return zkaFactory;
 }
 
 export async function deployZKAVerifier(
@@ -51,17 +48,6 @@ export async function deployZKAVerifier(
   tx: ContractTransactionResponse;
   computeZKAVerifierAddress: string;
 }> {
-  // let newZKAVerifier: string = "";
-  // const tx = await zkaFactory.deployZKAVerifier(
-  //   zkpVerifierName,
-  //   url,
-  //   deployer,
-  //   zkpVerifierAddress
-  // );
-  // newZKAVerifier = await zkaFactory.computeZKAVerifierAddress(
-  //   zkpVerifierName,
-  //   url
-  // );
   return {
     tx: await zkaFactory.deployZKAVerifier(
       zkpVerifierName,
