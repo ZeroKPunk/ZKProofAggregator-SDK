@@ -61,7 +61,10 @@ export class ZkProofAggregator {
     url: string,
     deployer: string,
     zkpVerifierAddress: string
-  ): Promise<string> {
+  ): Promise<{
+    tx: ContractTransactionResponse;
+    computeZKAVerifierAddress: string;
+  }> {
     const { zkaFactory } = getGlobalState();
     if (!zkaFactory) {
       throw new Error("ZKAFactory not found, please deploy it first.");

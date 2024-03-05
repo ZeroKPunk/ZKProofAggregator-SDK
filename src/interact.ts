@@ -3,7 +3,7 @@ import {
   ZKAVerifier__factory,
   ZKAFactory,
   ZKAFactory__factory,
-} from "./typechain-types";
+} from "./zkpContractsImpl";
 
 import { Signer, ContractTransactionResponse } from "ethers";
 import { IVerifierMeta } from "./types";

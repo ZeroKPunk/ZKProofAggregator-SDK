@@ -12,7 +12,7 @@ import {
   ZKAVerifier__factory,
   ZKAFactory,
   ZKAFactory__factory,
-} from "../typechain-types";
+} from "../zkpContractsImpl";
 
 export interface ISignerConfig<T> {
   signer?: T;

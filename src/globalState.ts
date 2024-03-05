@@ -5,7 +5,7 @@ import {
   ZKAVerifier__factory,
   ZKAFactory,
   ZKAFactory__factory,
-} from "./typechain-types";
+} from "./zkpContractsImpl";
 
 // let globalState: IGlobalState = {
 //   isMainnet: true,
