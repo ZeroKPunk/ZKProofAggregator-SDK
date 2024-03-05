@@ -5,11 +5,13 @@ import {
   VerifierMock,
   VerifierMock__factory,
   ZKAFactory,
+  ZKAFactory__factory,
 } from "../zkpContractsImpl";
 import { getWallet } from "./utils";
+import { deployZKAFactory, deployZKProofAggregatorImpl } from "../deployment";
 require("dotenv").config("./.env");
 
-describe.skip("zk-globalState tests", () => {
+describe("zk-UsedByDeploedFactory tests", () => {
   let zkpproofAggregator: ZkProofAggregator;
   let plonk2MockVerifier: VerifierMock;
   let proofMock: string;
@@ -21,17 +23,16 @@ describe.skip("zk-globalState tests", () => {
       throw new Error(
         "private key can not be empty, pls add your private to the environment to be able to run the tests"
       );
+
     const signer: Signer = getWallet(privateKey, providerUrl);
-    zkpproofAggregator = ZkProofAggregator.getInstance(signer);
 
-    await zkpproofAggregator.deployAllContractsNeeded(
-      zkpproofAggregator.getGlobalState().signer
-    );
-
-    const zkaFactory: ZKAFactory =
-      zkpproofAggregator.getGlobalState().zkaFactory;
-
+    const verifierImpl = await deployZKProofAggregatorImpl(signer);
+    const zkaFactory: ZKAFactory = await deployZKAFactory(signer, verifierImpl);
     console.log("ZKAFactory deploy at: ", await zkaFactory.getAddress());
+    zkpproofAggregator = ZkProofAggregator.getInstance(
+      signer,
+      await zkaFactory.getAddress()
+    );
 
     plonk2MockVerifier = await new VerifierMock__factory(signer).deploy();
     await plonk2MockVerifier.waitForDeployment();
