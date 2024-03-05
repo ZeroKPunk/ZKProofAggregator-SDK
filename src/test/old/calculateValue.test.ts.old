@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { Orbiter } from "../orbiter";
+import { Orbiter } from "../../orbiter";
 
 describe("value tests", () => {
   let orbiter: Orbiter = new Orbiter({});

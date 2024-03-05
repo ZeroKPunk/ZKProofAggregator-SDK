@@ -1,13 +1,13 @@
 require("dotenv").config("./.env");
 import { beforeAll, describe, expect, test } from "vitest";
-import { Orbiter } from "../orbiter";
+import { Orbiter } from "../../orbiter";
 import {
   ILoopringResponse,
   TStarknetResponse,
   TContractTransactionResponse,
   TIMXTransactionResponse,
   TTransactionResponse,
-} from "../types";
+} from "../../types";
 
 describe("orbiter tests", () => {
   // add your private key to the environment to be able to run the tests

@@ -7,6 +7,13 @@ import { HexString } from "ethers-6/lib.commonjs/utils/data";
 import { Account, InvokeFunctionResponse } from "starknet";
 import Web3 from "web3";
 
+import {
+  ZKAVerifier,
+  ZKAVerifier__factory,
+  ZKAFactory,
+  ZKAFactory__factory,
+} from "../typechain-types";
+
 export interface ISignerConfig<T> {
   signer?: T;
   privateKey?: string | HexString;
@@ -323,4 +330,19 @@ export interface AccountInfo {
   nonce: number;
   keyNonce: number;
   keySeed: string;
+}
+
+export interface IzkpGlobalState {
+  [k: string]: boolean | Signer | ZKAFactory;
+  isMainnet: boolean;
+  signer: Signer;
+  zkaFactory: ZKAFactory;
+}
+
+export interface IVerifierMeta {
+  verifierAddress: string;
+  zkpVerifierName: string;
+  url: string;
+  deployer: string;
+  deployTimestamp: BigInt;
 }

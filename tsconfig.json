@@ -1,11 +1,6 @@
 {
   "compilerOptions": {
-    "lib": [
-      "ESNext",
-      "ES2020",
-      "ES5",
-      "DOM"
-    ],
+    "lib": ["ESNext", "ES2020", "ES5", "DOM"],
     "declaration": true /* Generates corresponding '.d.ts' file. */,
     "declarationMap": true,
     "esModuleInterop": true,
@@ -22,13 +17,15 @@
     "moduleResolution": "Node",
     "outDir": "./dist" /* Redirect output structure to the directory. */,
     "strict": true,
-    "target": "ESNext",
+    "target": "ESNext"
   },
-  "include": [
-    "src",
-    "src/**/*.json",
-    "src/*.ts",
-    "src/*",
-  ],
-  "exclude": ["test", "demo", "node_modules", "dist", "./dist/**/*", "./types/**/*"]
+  "include": ["src", "src/**/*.json", "src/*.ts", "src/*", "oldtest"],
+  "exclude": [
+    "test",
+    "demo",
+    "node_modules",
+    "dist",
+    "./dist/**/*",
+    "./types/**/*"
+  ]
 }
