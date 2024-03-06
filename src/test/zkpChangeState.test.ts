@@ -19,6 +19,7 @@ describe.skip("zk-globalState-change tests", () => {
       );
     const signer: Signer = getWallet(privateKey, providerUrl);
     zkpproofAggregator = ZkProofAggregator.getInstance(signer);
+    console.log("state: ", zkpproofAggregator.getConfig());
   });
 
   test("getGlobalState", async () => {

@@ -1,4 +1,4 @@
-import { setGlobalState } from "./globalState";
+import { setGlobalState, setSpvGlobalState } from "./globalState";
 import {
   ZKAVerifier,
   ZKAVerifier__factory,
@@ -64,11 +64,13 @@ export async function deployZKAVerifier(
   };
 }
 
-export async function deploySPVVerifier(
-  signerL1: Signer,
+export async function deploySPVAllContractsNeeded(
+  signer: Signer,
   spvVerifierAddress: string
-): Promise<ContractTransactionResponse> {
-  const spvVerifier = await new SPVVerifier__factory(signerL1).deploy();
+): Promise<void> {
+  const spvVerifier = await new SPVVerifier__factory(signer).deploy();
   await spvVerifier.waitForDeployment();
-  return await spvVerifier.setVerifier(spvVerifierAddress);
+  setSpvGlobalState({ spvVerifier });
+  const tx = await spvVerifier.setVerifier(spvVerifierAddress);
+  await tx.wait();
 }

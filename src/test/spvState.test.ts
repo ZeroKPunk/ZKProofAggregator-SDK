@@ -1,74 +1,54 @@
 import { beforeAll, describe, expect, test } from "vitest";
-import { ZkProofAggregator } from "../zkProofAggregator";
-import { Wallet, ethers, Signer } from "ethers";
+import { ZkProofAggregator, SPV } from "../zkProofAggregator";
+import { Wallet, ethers, Signer, keccak256 } from "ethers";
 import {
+  SPVVerifier,
+  SPVVerifier__factory,
   VerifierMock,
   VerifierMock__factory,
-  ZKAFactory,
-  ZKAFactory__factory,
 } from "../zkpContractsImpl";
 import { getWallet } from "./utils";
 import { deployZKAFactory, deployZKProofAggregatorImpl } from "../deployment";
 require("dotenv").config("./.env");
 
-describe.skip("spv state tests", () => {
-  let zkpproofAggregator: ZkProofAggregator;
-  let plonk2MockVerifier: VerifierMock;
+describe("spv state tests", () => {
+  let spv: SPV;
+  let verifierMock: VerifierMock;
   let proofMock: string;
 
   beforeAll(async () => {
     const privateKey: string = process.env.PRIVATE_KEY || "";
     const providerUrl: string = process.env.DEFAULT_RPC_URL || "";
-    if (!privateKey || !providerUrl)
+    if (!privateKey || !providerUrl) {
       throw new Error(
         "private key can not be empty, pls add your private to the environment to be able to run the tests"
       );
-
+    }
     const signer: Signer = getWallet(privateKey, providerUrl);
-
-    const verifierImpl = await deployZKProofAggregatorImpl(signer);
-    const zkaFactory: ZKAFactory = await deployZKAFactory(signer, verifierImpl);
-    console.log("ZKAFactory deploy at: ", await zkaFactory.getAddress());
-    zkpproofAggregator = ZkProofAggregator.getInstance(
-      signer,
-      await zkaFactory.getAddress()
-    );
-
-    plonk2MockVerifier = await new VerifierMock__factory(signer).deploy();
-    await plonk2MockVerifier.waitForDeployment();
-    proofMock = await plonk2MockVerifier.getVerifyCalldata("for test");
+    spv = new SPV(signer);
+    verifierMock = await new VerifierMock__factory(signer).deploy();
+    await verifierMock.waitForDeployment();
+    await spv.deploy(await verifierMock.getAddress());
   });
 
   test("getGlobalState", async () => {
-    const globalState = zkpproofAggregator.getConfig();
-    expect(globalState).toBeDefined();
+    const globalState = spv.getConfig();
+    expect(globalState.spvVerifier).toBeDefined();
   });
 
-  test("deployZKAVerifier", async () => {
-    const zkpVerifierName = "PLONK2";
-    const url = "http://localhost:3000";
-    const deployer = await zkpproofAggregator.getConfig().signer.getAddress();
-    const { tx, computeZKAVerifierAddress } =
-      await zkpproofAggregator.deployZKAVerifier(
-        zkpVerifierName,
-        url,
-        deployer,
-        await plonk2MockVerifier.getAddress()
-      );
+  test("test verify", async () => {
+    const spvMockVerifier = await new VerifierMock__factory(
+      spv.getConfig().signer
+    ).deploy();
+    await spvMockVerifier.waitForDeployment();
+    proofMock = await spvMockVerifier.getVerifyCalldata("for test");
+    const tx = await spv.verify(proofMock);
     await tx.wait();
-    console.log("zkpVerifierAddress: ", computeZKAVerifierAddress);
   });
 
-  test("fetchZKAVerifier", async () => {
-    const zkpVerifierAddress = await zkpproofAggregator.fetchVerifiersMeta();
-    console.log("zkpVerifierMeta: ", zkpVerifierAddress);
-    expect(zkpVerifierAddress).toBeDefined();
-  });
-
-  test("testZkpVerify", async () => {
-    const currentVerifier = (await zkpproofAggregator.fetchVerifiersMeta())[0]
-      .verifierAddress;
-    const tx = await zkpproofAggregator.zkpVerify(currentVerifier, proofMock);
+  test("test sync state", async () => {
+    const mockState = keccak256(ethers.randomBytes(32));
+    const tx = await spv.syncState(mockState);
     await tx.wait();
   });
 });

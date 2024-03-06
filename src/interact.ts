@@ -3,6 +3,7 @@ import {
   ZKAVerifier__factory,
   ZKAFactory,
   ZKAFactory__factory,
+  SPVVerifier,
 } from "./zkpContractsImpl";
 
 import { Signer, ContractTransactionResponse } from "ethers";

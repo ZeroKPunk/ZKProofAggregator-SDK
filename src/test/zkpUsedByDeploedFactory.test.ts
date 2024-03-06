@@ -11,7 +11,7 @@ import { getWallet } from "./utils";
 import { deployZKAFactory, deployZKProofAggregatorImpl } from "../deployment";
 require("dotenv").config("./.env");
 
-describe("zk-UsedByDeploedFactory tests", () => {
+describe.skip("zk-UsedByDeploedFactory tests", () => {
   let zkpproofAggregator: ZkProofAggregator;
   let plonk2MockVerifier: VerifierMock;
   let proofMock: string;

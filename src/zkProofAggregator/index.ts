@@ -10,12 +10,13 @@ import {
 } from "../globalState";
 import {
   deployAllContractsNeeded,
-  deploySPVVerifier,
+  deploySPVAllContractsNeeded,
   deployZKAFactory,
   deployZKAVerifier,
   deployZKProofAggregatorImpl,
 } from "../deployment";
 import { fetchAllZKAVerifiersMeta, zkpVerify } from "../interact";
+import { set } from "lodash";
 export class ZkProofAggregator {
   private static instance: ZkProofAggregator;
   constructor(signer: Signer, zkaFactoryAddres?: string) {
@@ -41,6 +42,10 @@ export class ZkProofAggregator {
 
   setConfig(newState: Partial<IzkpGlobalState> = {}) {
     setGlobalState(newState);
+  }
+
+  connect(signer: Signer) {
+    setGlobalState({ signer });
   }
 
   setZkaFactory(signer: Signer, zkaFactoryAddress: string) {
@@ -109,7 +114,7 @@ export class ZkProofAggregator {
 export class SPV {
   private static instance: SPV;
   constructor(signer: Signer, spvAddress?: string) {
-    setGlobalState({ signer });
+    setSpvGlobalState({ signer });
     if (spvAddress) {
       setSPV(signer, spvAddress);
     }
@@ -121,6 +126,10 @@ export class SPV {
     return SPV.instance;
   }
 
+  connect(signer: Signer) {
+    setSpvGlobalState({ signer });
+  }
+
   getConfig() {
     return getSpvGlobalState();
   }
@@ -129,10 +138,30 @@ export class SPV {
     setSpvGlobalState(newState);
   }
 
-  async deploySPVVerifier(
-    signer: Signer,
-    spvVerifierAddress: string
-  ): Promise<ContractTransactionResponse> {
-    return deploySPVVerifier(signer, spvVerifierAddress);
+  async deploy(spvVerifierAddress: string): Promise<void> {
+    const { signer } = this.getConfig();
+    return deploySPVAllContractsNeeded(signer, spvVerifierAddress);
+  }
+
+  async verify(proof: string): Promise<ContractTransactionResponse> {
+    const { signer, spvVerifier } = this.getConfig();
+    if (!signer) {
+      throw new Error("Signer not found, please set it first.");
+    }
+    if (!spvVerifier) {
+      throw new Error("SPVVerifier not found, please deploy it first.");
+    }
+    return spvVerifier.verify(proof);
+  }
+
+  async syncState(mptRoot: string): Promise<ContractTransactionResponse> {
+    const { signer, spvVerifier } = this.getConfig();
+    if (!signer) {
+      throw new Error("Signer not found, please set it first.");
+    }
+    if (!spvVerifier) {
+      throw new Error("SPVVerifier not found, please deploy it first.");
+    }
+    return spvVerifier.syncState(mptRoot);
   }
 }
