@@ -28,7 +28,7 @@ function setGlobalState(newState: Partial<IzkpGlobalState> = {}) {
   }
 }
 
-function setZkaFactory(signer: Signer, zkaFactoryAddress: string) {
+function setFactory(signer: Signer, zkaFactoryAddress: string) {
   const zkaFactory: ZKAFactory = ZKAFactory__factory.connect(
     zkaFactoryAddress,
     signer
@@ -64,7 +64,7 @@ function getSpvGlobalState(): IspvGlobalState {
 export {
   setGlobalState,
   getGlobalState,
-  setZkaFactory,
+  setFactory,
   setSpvGlobalState,
   getSpvGlobalState,
   setSPV,

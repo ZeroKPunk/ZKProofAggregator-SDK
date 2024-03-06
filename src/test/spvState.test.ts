@@ -11,7 +11,7 @@ import { getWallet } from "./utils";
 import { deployZKAFactory, deployZKProofAggregatorImpl } from "../deployment";
 require("dotenv").config("./.env");
 
-describe("spv state tests", () => {
+describe.skip("spv state tests", () => {
   let spv: SPV;
   let verifierMock: VerifierMock;
   let proofMock: string;

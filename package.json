@@ -1,6 +1,6 @@
 {
   "name": "zktest-sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "the solution of zkroof aggregator",
   "main": "index.js",
   "author": "pis",

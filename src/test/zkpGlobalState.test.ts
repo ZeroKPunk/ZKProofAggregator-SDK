@@ -9,7 +9,7 @@ import {
 import { getWallet } from "./utils";
 require("dotenv").config("./.env");
 
-describe.skip("zk-globalState tests", () => {
+describe("zk-globalState tests", () => {
   let zkpproofAggregator: ZkProofAggregator;
   let plonk2MockVerifier: VerifierMock;
   let proofMock: string;
@@ -24,9 +24,7 @@ describe.skip("zk-globalState tests", () => {
     const signer: Signer = getWallet(privateKey, providerUrl);
     zkpproofAggregator = ZkProofAggregator.getInstance(signer);
 
-    await zkpproofAggregator.deployAllContractsNeeded(
-      zkpproofAggregator.getConfig().signer
-    );
+    await zkpproofAggregator.deploy();
 
     const zkaFactory: ZKAFactory = zkpproofAggregator.getConfig().zkaFactory;
 

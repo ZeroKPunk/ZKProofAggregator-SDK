@@ -9,6 +9,7 @@ import {
 } from "../zkpContractsImpl";
 import { getWallet } from "./utils";
 import { deployZKAFactory, deployZKProofAggregatorImpl } from "../deployment";
+import { skip } from "node:test";
 require("dotenv").config("./.env");
 
 describe.skip("zk-UsedByDeploedFactory tests", () => {

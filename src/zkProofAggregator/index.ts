@@ -6,7 +6,7 @@ import {
   setGlobalState,
   setSPV,
   setSpvGlobalState,
-  setZkaFactory,
+  setFactory,
 } from "../globalState";
 import {
   deployAllContractsNeeded,
@@ -16,13 +16,12 @@ import {
   deployZKProofAggregatorImpl,
 } from "../deployment";
 import { fetchAllZKAVerifiersMeta, zkpVerify } from "../interact";
-import { set } from "lodash";
 export class ZkProofAggregator {
   private static instance: ZkProofAggregator;
   constructor(signer: Signer, zkaFactoryAddres?: string) {
     setGlobalState({ signer });
     if (zkaFactoryAddres) {
-      setZkaFactory(signer, zkaFactoryAddres);
+      setFactory(signer, zkaFactoryAddres);
     }
   }
 
@@ -48,19 +47,35 @@ export class ZkProofAggregator {
     setGlobalState({ signer });
   }
 
-  setZkaFactory(signer: Signer, zkaFactoryAddress: string) {
-    setZkaFactory(signer, zkaFactoryAddress);
+  setFactory(zkaFactoryAddress: string) {
+    const { signer } = this.getConfig();
+    if (!signer) {
+      throw new Error("Signer not found, please set it first.");
+    }
+    setFactory(signer, zkaFactoryAddress);
   }
 
-  async deployAllContractsNeeded(signer: Signer): Promise<void> {
+  async deploy(): Promise<void> {
+    const { signer } = this.getConfig();
+    if (!signer) {
+      throw new Error("Signer not found, please set it first.");
+    }
     return deployAllContractsNeeded(signer);
   }
 
-  async deployZKProofAggregatorImpl(signer: Signer): Promise<string> {
+  async deployZKProofAggregatorImpl(): Promise<string> {
+    const { signer } = this.getConfig();
+    if (!signer) {
+      throw new Error("Signer not found, please set it first.");
+    }
     return deployZKProofAggregatorImpl(signer);
   }
 
-  async deployFactory(signer: Signer, ZKProofAggregatorImpl: string) {
+  async deployFactory(ZKProofAggregatorImpl: string) {
+    const { signer } = this.getConfig();
+    if (!signer) {
+      throw new Error("Signer not found, please set it first.");
+    }
     if (!ZKProofAggregatorImpl || ZKProofAggregatorImpl === "") {
       throw new Error(
         "ZKProofAggregatorImpl not found, please deploy it first."
