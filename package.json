@@ -1,8 +1,19 @@
 {
   "name": "zktest-sdk",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "the solution of zkroof aggregator",
-  "main": "index.js",
+  "main": "./dist/zkproofaggregator-SDK.cjs.js",
+  "module": "./dist/zkproofaggregator-SDK.esm.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/zkproofaggregator-SDK.esm.js",
+      "default": {
+        "types": "./dist/zkproofaggregator-SDK.d.ts",
+        "default": "./dist/zkproofaggregator-SDK.cjs.js"
+      }
+    }
+  },
+  "types": "./dist/index.d.ts",
   "author": "pis",
   "license": "MIT",
   "scripts": {
