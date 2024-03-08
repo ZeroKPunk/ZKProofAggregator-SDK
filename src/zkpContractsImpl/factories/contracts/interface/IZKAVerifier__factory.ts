@@ -81,13 +81,7 @@ const _abi = [
       },
     ],
     name: "zkpVerify",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
+    outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },

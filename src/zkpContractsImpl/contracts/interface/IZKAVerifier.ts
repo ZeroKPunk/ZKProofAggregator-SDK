@@ -119,7 +119,7 @@ export interface IZKAVerifier extends BaseContract {
     "nonpayable"
   >;
 
-  zkpVerify: TypedContractMethod<[zkProof: BytesLike], [boolean], "nonpayable">;
+  zkpVerify: TypedContractMethod<[zkProof: BytesLike], [void], "nonpayable">;
 
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
@@ -143,7 +143,7 @@ export interface IZKAVerifier extends BaseContract {
   >;
   getFunction(
     nameOrSignature: "zkpVerify"
-  ): TypedContractMethod<[zkProof: BytesLike], [boolean], "nonpayable">;
+  ): TypedContractMethod<[zkProof: BytesLike], [void], "nonpayable">;
 
   filters: {};
 }

@@ -18,6 +18,11 @@ import { ZkProofAggregator } from 'zkproofaggregator-sdk';
 const zkpproofAggregator = new ZkProofAggregator(signer, zkaFactoryAddress);
 ```
 
+reconnect signer
+```
+zkpproofAggregator.connect(newSigner);
+spv.connect(newSigner);
+```
 
 ### 2. Create SPV
 create without deployed spv contract
@@ -44,6 +49,14 @@ await zkpproofAggregator.deploy();
 const spv = new SPV(signer);
 await spv.deploy();
 ```
+
+you can check all detail in config
+```
+const zkaSatate = zkpproofAggregator.getConfig();
+const spvState = spv.getConfig();
+```
+
+after call deploy methods, contracts address has been add to instance.config()
 
 ## Verify zkproof in L2
 ### 1. create custom zkproof verifier
