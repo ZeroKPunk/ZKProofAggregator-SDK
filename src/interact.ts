@@ -40,3 +40,18 @@ export async function zkpVerify(
 
   return await zkaVerifier.zkpVerify(zkProof);
 }
+
+export async function getProofStatus(
+  signer: Signer,
+  zkaFactory: ZKAFactory,
+  ZKAVerifierAddress: string,
+  zkProof: string
+): Promise<BigInt> {
+  const zkaVerifier: ZKAVerifier = ZKAVerifier__factory.connect(
+    ZKAVerifierAddress,
+    signer
+  );
+  const proofKey: string = await zkaVerifier.fetchProofKey(zkProof);
+
+  return await zkaFactory.proofInStorage(proofKey);
+}

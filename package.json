@@ -1,6 +1,6 @@
 {
   "name": "zkproofaggregator-sdk",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "the solution of zkroof aggregator",
   "main": "./dist/zkproofaggregator-SDK.cjs.js",
   "module": "./dist/zkproofaggregator-SDK.esm.js",

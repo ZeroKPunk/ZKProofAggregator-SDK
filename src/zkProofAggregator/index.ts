@@ -15,7 +15,12 @@ import {
   deployZKAVerifier,
   deployZKProofAggregatorImpl,
 } from "../deployment";
-import { fetchAllZKAVerifiersMeta, zkpVerify } from "../interact";
+import {
+  fetchAllZKAVerifiersMeta,
+  getProofStatus,
+  zkpVerify,
+} from "../interact";
+import { as } from "vitest/dist/reporters-5f784f42";
 export class ZkProofAggregator {
   private static instance: ZkProofAggregator;
   constructor(signer: Signer, zkaFactoryAddres?: string) {
@@ -123,6 +128,22 @@ export class ZkProofAggregator {
       throw new Error("Signer not found, please set it first.");
     }
     return zkpVerify(signer, ZKAVerifierAddress, zkProof);
+  }
+
+  async checkProofVerifyStatus(
+    ZKAVerifierAddress: string,
+    zkProof: string
+  ): Promise<BigInt> {
+    const { signer } = getGlobalState();
+    if (!signer) {
+      throw new Error("Signer not found, please set it first.");
+    }
+    return getProofStatus(
+      signer,
+      getGlobalState().zkaFactory,
+      ZKAVerifierAddress,
+      zkProof
+    );
   }
 }
 

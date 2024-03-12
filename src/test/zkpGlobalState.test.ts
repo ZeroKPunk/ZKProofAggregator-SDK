@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, test } from "vitest";
 import { ZkProofAggregator } from "../zkProofAggregator";
-import { Wallet, ethers, Signer } from "ethers";
+import { Wallet, ethers, Signer, ContractTransactionResponse } from "ethers";
 import {
   VerifierMock,
   VerifierMock__factory,
@@ -56,15 +56,24 @@ describe("zk-globalState tests", () => {
   });
 
   test("fetchZKAVerifier", async () => {
-    const zkpVerifierAddress = await zkpproofAggregator.fetchVerifiersMeta();
-    console.log("zkpVerifierMeta: ", zkpVerifierAddress);
-    expect(zkpVerifierAddress).toBeDefined();
+    const zkpVerifierMeta = await zkpproofAggregator.fetchVerifiersMeta();
+    console.log("zkpVerifierMeta: ", zkpVerifierMeta);
+    expect(zkpVerifierMeta).toBeDefined();
   });
 
   test("testZkpVerify", async () => {
     const currentVerifier = (await zkpproofAggregator.fetchVerifiersMeta())[0]
       .verifierAddress;
     const tx = await zkpproofAggregator.zkpVerify(currentVerifier, proofMock);
-    await tx.wait();
+    const transactionReceipt = await tx.wait();
+    const gasUsed = transactionReceipt!.gasUsed;
+    console.log("ZkpVerify gasUsed: ", gasUsed);
+
+    const proofStatus = await zkpproofAggregator.checkProofVerifyStatus(
+      currentVerifier,
+      proofMock
+    );
+    expect(proofStatus).toBeDefined();
+    console.log("proofStatus: ", proofStatus);
   });
 });

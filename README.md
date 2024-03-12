@@ -87,6 +87,14 @@ const tx = await zkpproofAggregator.zkpVerify(currentVerifier, proof);
 await tx.wait();
 ```
 
+### 4. check proof verify status
+```
+const proofStatus = await zkpproofAggregator.checkProofVerifyStatus(
+  currentVerifier,
+  proofMock
+);
+```
+
 
 ## verification in L1
 ```
